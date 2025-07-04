@@ -229,6 +229,24 @@
                 >{{ data.value.email }}</a
               >
             </template>
+            <template #id="data">
+              <div class="flex gap-2">
+                <button
+                  type="button"
+                  class="btn btn-outline-primary w-1/2"
+                  @click="editCustomer(data.value)"
+                >
+                  Edit
+                </button>
+                <button
+                  type="button"
+                  class="btn btn-outline-danger w-1/2"
+                  @click="deleteCustomer(data.value)"
+                >
+                  Delete
+                </button>
+              </div>
+            </template>
           </Vue3Datatable>
         </div>
       </template>
@@ -487,22 +505,27 @@ const columns = [
   {
     title: "Name",
     field: "name",
-    sortable: true,
+    sort: true,
   },
   {
     title: "Email",
     field: "email",
-    sortable: true,
+    sort: true,
   },
   {
     title: "Phone",
     field: "phone",
-    sortable: false,
+    sort: false,
   },
   {
     title: "Address",
     field: "address",
-    sortable: false,
+    sort: false,
+  },
+  {
+    title: "Action",
+    field: "id",
+    sort: false,
   },
 ];
 
@@ -558,8 +581,10 @@ function onSearch(val: string) {
 }
 
 const editCustomer = (customer: any = null) => {
+  console.log(customer)
   params.value = JSON.parse(JSON.stringify(defaultParams.value));
   if (customer) {
+    console.log(customer)
     params.value = JSON.parse(JSON.stringify(customer));
   }
 
