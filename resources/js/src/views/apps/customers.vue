@@ -183,169 +183,84 @@
         </div>
       </div>
     </div>
-    <div class="mt-5 panel p-0 border-0 overflow-hidden">
+    <div class="mt-5 panel p-4 border-0 overflow-hidden">
       <template v-if="displayType === 'list'">
-        <vue3-datatable
-          :columns="columns"
-          :rows="rows"
-          :loading="loading"
-          :search="true"
-          :per-page="perPage"
-          :total="total"
-          :page="page"
-          @update:search="onSearch"
-          @update:page="onPageChange"
-        />
+        <div class="datatable">
+          <Vue3Datatable
+            :columns="columns"
+            :rows="customerList"
+            :loading="loading"
+            :per-page="perPage"
+            :total="total"
+            :page="page"
+            @update:search="onSearch"
+            @update:page="onPageChange"
+            skin="whitespace-nowrap bh-table-hover"
+            firstArrow='<svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" class="w-4.5 h-4.5 rtl:rotate-180"> <path d="M13 19L7 12L13 5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/> <path opacity="0.5" d="M16.9998 19L10.9998 12L16.9998 5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/> </svg>'
+            lastArrow='<svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" class="w-4.5 h-4.5 rtl:rotate-180"> <path d="M11 19L17 12L11 5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/> <path opacity="0.5" d="M6.99976 19L12.9998 12L6.99976 5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/> </svg> '
+            previousArrow='<svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" class="w-4.5 h-4.5 rtl:rotate-180"> <path d="M15 5L9 12L15 19" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/> </svg>'
+            nextArrow='<svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" class="w-4.5 h-4.5 rtl:rotate-180"> <path d="M9 5L15 12L9 19" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/> </svg>'
+          >
+            <template #serial="{ index }">
+              {{ (page - 1) * perPage + index + 1 }}
+            </template>
+            <template #name="data">
+              <div class="flex items-center gap-2">
+                <img
+                  :src="
+                    data.value.image
+                      ? `/assets/images/${data.value.image}`
+                      : `https://ui-avatars.com/api/?name=${encodeURIComponent(
+                          data.value.name
+                        )}&background=random&color=fff`
+                  "
+                  class="w-9 h-9 rounded-full max-w-none"
+                  alt="user-profile"
+                />
+                <div class="font-semibold">
+                  {{ data.value.name }}
+                </div>
+              </div>
+            </template>
+            <template #email="data">
+              <a
+                :href="`mailto:${data.value.email}`"
+                class="text-primary hover:underline"
+                >{{ data.value.email }}</a
+              >
+            </template>
+          </Vue3Datatable>
+        </div>
       </template>
     </div>
     <template v-if="displayType === 'grid'">
       <div
         class="grid 2xl:grid-cols-4 xl:grid-cols-3 sm:grid-cols-2 grid-cols-1 gap-6 w-full"
       >
-        <template v-for="cusomer in filterdCustomersList" :key="cusomer.id">
+        <template v-for="cusomer in customerList" :key="cusomer.id">
           <div
             class="bg-white dark:bg-[#1c232f] rounded-md overflow-hidden text-center shadow relative"
           >
-            <div
-              class="bg-white/40 rounded-t-md bg-[url('/assets/images/notification-bg.png')] bg-center bg-cover p-6 pb-0"
-            >
-              <template v-if="cusomer.path">
+            <div class="bg-white/40 rounded-t-md bg-center bg-cover p-6">
+              <div class="flex justify-center">
                 <img
-                  class="object-contain w-4/5 max-h-40 mx-auto"
-                  :src="`/assets/images/${cusomer.path}`"
+                  :src="
+                    cusomer.image
+                      ? `/assets/images/${cusomer.image}`
+                      : '/assets/images/profile-35.png'
+                  "
+                  alt="Customer Profile"
+                  class="w-24 h-24 rounded-full object-cover border-4 border-white shadow-lg"
                 />
-              </template>
+              </div>
             </div>
-            <div class="px-6 pb-24 -mt-10 relative">
+            <div class="px-6 pb-24 relative">
               <div
-                class="shadow-md bg-white dark:bg-gray-900 rounded-md px-2 py-4"
+                class="shadow-md bg-white dark:bg-gray-900 rounded-md px-4 py-4 -mt-10"
               >
-                <div class="text-xl">{{ cusomer.name }}</div>
-                <div class="text-white-dark">{{ cusomer.role }}</div>
-                <div
-                  class="flex items-center justify-between flex-wrap mt-6 gap-3"
-                >
-                  <div class="flex-auto">
-                    <div class="text-info">{{ cusomer.posts }}</div>
-                    <div>Posts</div>
-                  </div>
-                  <div class="flex-auto">
-                    <div class="text-info">{{ cusomer.following }}</div>
-                    <div>Following</div>
-                  </div>
-                  <div class="flex-auto">
-                    <div class="text-info">{{ cusomer.followers }}</div>
-                    <div>Followers</div>
-                  </div>
-                </div>
-                <div class="mt-4">
-                  <ul
-                    class="flex space-x-4 rtl:space-x-reverse items-center justify-center"
-                  >
-                    <li>
-                      <a
-                        href="javascript:;"
-                        class="btn btn-outline-primary p-0 h-7 w-7 rounded-full"
-                      >
-                        <svg
-                          xmlns="http://www.w3.org/2000/svg"
-                          width="24px"
-                          height="24px"
-                          viewBox="0 0 24 24"
-                          fill="none"
-                          stroke="currentColor"
-                          stroke-width="1.5"
-                          stroke-linecap="round"
-                          stroke-linejoin="round"
-                          class="w-4 h-4"
-                        >
-                          <path
-                            d="M18 2h-3a5 5 0 0 0-5 5v3H7v4h3v8h4v-8h3l1-4h-4V7a1 1 0 0 1 1-1h3z"
-                          ></path>
-                        </svg>
-                      </a>
-                    </li>
-                    <li>
-                      <a
-                        href="javascript:;"
-                        class="btn btn-outline-primary p-0 h-7 w-7 rounded-full"
-                      >
-                        <svg
-                          xmlns="http://www.w3.org/2000/svg"
-                          width="24px"
-                          height="24px"
-                          viewBox="0 0 24 24"
-                          fill="none"
-                          stroke="currentColor"
-                          stroke-width="1.5"
-                          stroke-linecap="round"
-                          stroke-linejoin="round"
-                          class="w-4 h-4"
-                        >
-                          <rect
-                            x="2"
-                            y="2"
-                            width="20"
-                            height="20"
-                            rx="5"
-                            ry="5"
-                          ></rect>
-                          <path
-                            d="M16 11.37A4 4 0 1 1 12.63 8 4 4 0 0 1 16 11.37z"
-                          ></path>
-                          <line x1="17.5" y1="6.5" x2="17.51" y2="6.5"></line>
-                        </svg>
-                      </a>
-                    </li>
-                    <li>
-                      <a
-                        href="javascript:;"
-                        class="btn btn-outline-primary p-0 h-7 w-7 rounded-full"
-                      >
-                        <svg
-                          xmlns="http://www.w3.org/2000/svg"
-                          width="24px"
-                          height="24px"
-                          viewBox="0 0 24 24"
-                          fill="none"
-                          stroke="currentColor"
-                          stroke-width="1.5"
-                          stroke-linecap="round"
-                          stroke-linejoin="round"
-                          class="w-4 h-4"
-                        >
-                          <path
-                            d="M16 8a6 6 0 0 1 6 6v7h-4v-7a2 2 0 0 0-2-2 2 2 0 0 0-2 2v7h-4v-7a6 6 0 0 1 6-6z"
-                          ></path>
-                          <rect x="2" y="9" width="4" height="12"></rect>
-                          <circle cx="4" cy="4" r="2"></circle>
-                        </svg>
-                      </a>
-                    </li>
-                    <li>
-                      <a
-                        href="javascript:;"
-                        class="btn btn-outline-primary p-0 h-7 w-7 rounded-full"
-                      >
-                        <svg
-                          xmlns="http://www.w3.org/2000/svg"
-                          width="24px"
-                          height="24px"
-                          viewBox="0 0 24 24"
-                          fill="none"
-                          stroke="currentColor"
-                          stroke-width="1.5"
-                          stroke-linecap="round"
-                          stroke-linejoin="round"
-                          class="w-4 h-4"
-                        >
-                          <path
-                            d="M23 3a10.9 10.9 0 0 1-3.14 1.53 4.48 4.48 0 0 0-7.86 3v1A10.66 10.66 0 0 1 3 4s-4 9 5 13a11.64 11.64 0 0 1-7 2c9 5 20 0 20-11.5a4.5 4.5 0 0 0-.08-.83A7.72 7.72 0 0 0 23 3z"
-                          ></path>
-                        </svg>
-                      </a>
-                    </li>
-                  </ul>
+                <div class="text-xl font-semibold mb-2">{{ cusomer.name }}</div>
+                <div class="text-gray-600 dark:text-gray-400 text-sm mb-4">
+                  {{ cusomer.email }}
                 </div>
               </div>
               <div
@@ -363,7 +278,7 @@
                 </div>
                 <div class="flex items-center">
                   <div class="flex-none ltr:mr-2 rtl:ml-2">Address :</div>
-                  <div class="text-white-dark">{{ cusomer.location }}</div>
+                  <div class="text-white-dark">{{ cusomer.address }}</div>
                 </div>
               </div>
             </div>
@@ -482,14 +397,23 @@
                       />
                     </div>
                     <div class="mb-5">
-                      <label for="occupation">Occupation</label>
+                      <label for="image">Profile Image</label>
                       <input
-                        id="occupation"
-                        type="text"
-                        placeholder="Enter Occupation"
+                        id="image"
+                        type="file"
+                        accept="image/*"
                         class="form-input"
-                        v-model="params.role"
+                        @change="handleImageUpload"
                       />
+                      <div v-if="params.image" class="mt-2">
+                        <img
+                          :src="
+                            imagePreview || `/assets/images/${params.image}`
+                          "
+                          alt="Preview"
+                          class="w-20 h-20 object-cover rounded-full"
+                        />
+                      </div>
                     </div>
                     <div class="mb-5">
                       <label for="address">Address</label>
@@ -498,7 +422,7 @@
                         rows="3"
                         placeholder="Enter Address"
                         class="form-textarea resize-none min-h-[130px]"
-                        v-model="params.location"
+                        v-model="params.address"
                       ></textarea>
                     </div>
                     <div class="flex justify-end items-center mt-8">
@@ -527,7 +451,7 @@
   </div>
 </template>
 <script lang="ts" setup>
-import { ref, onMounted,watch } from "vue";
+import { ref, onMounted, watch } from "vue";
 import {
   TransitionRoot,
   TransitionChild,
@@ -537,7 +461,7 @@ import {
 } from "@headlessui/vue";
 import Swal from "sweetalert2";
 import { useMeta } from "@/composables/use-meta";
-import Vue3Datatable from '@bhplugin/vue3-datatable';
+import Vue3Datatable from "@bhplugin/vue3-datatable";
 import "@bhplugin/vue3-datatable/dist/style.css";
 useMeta({ title: "Customers" });
 
@@ -545,53 +469,92 @@ const defaultParams = ref({
   id: null,
   name: "",
   email: "",
-  role: "",
   phone: "",
-  location: "",
+  location: "", // Used as address in API
+  image: "profile-35.png",
 });
 const displayType = ref("list");
 const addCustomerModal = ref(false);
 const params = ref(JSON.parse(JSON.stringify(defaultParams.value)));
-const filterdCustomersList: any = ref([]);
 const searchCustomer = ref("");
+const imagePreview = ref("");
 const columns = [
-  { label: "id", field: "id" },
-  { label: "Name", field: "name" },
-  { label: "Email", field: "email" },
+  {
+    title: "No",
+    field: "__slot:serial",
+    sort: false,
+  },
+  {
+    title: "Name",
+    field: "name",
+    sortable: true,
+  },
+  {
+    title: "Email",
+    field: "email",
+    sortable: true,
+  },
+  {
+    title: "Phone",
+    field: "phone",
+    sortable: false,
+  },
+  {
+    title: "Address",
+    field: "address",
+    sortable: false,
+  },
 ];
 
-const rows = ref([]);
 const loading = ref(false);
 const total = ref(0);
 const perPage = ref(10);
 const page = ref(1);
-const cusomerList = ref([]);
+const customerList = ref([]);
 
 const fetchData = async () => {
   loading.value = true;
   try {
-    const res = await fetch(
-      `/api/customers?per_page=${perPage.value}&page=${page.value}&search=${searchCustomer.value}`
-    );
-    const cusomerList = await res.json();
-    rows.value = cusomerList.data;
-    total.value = cusomerList.total;
+    const res = await fetch(`/api/customers?page=${page.value}`);
+    const result = await res.json();
+
+    // Jika API return dengan key "success"
+    if (result.success) {
+      customerList.value = result.data.data;
+      total.value = result.data.total ?? 0;
+    } else {
+      showMessage("Failed to fetch customers", "error");
+    }
   } catch (err) {
-    console.error("Failed to fetch", err);
+    console.error("Failed to fetch customers:", err);
+    showMessage("Failed to fetch customers", "error");
   } finally {
     loading.value = false;
   }
 };
 
-watch([page, searchCustomer], fetchData, { immediate: true });
+// Initial fetch
+fetchData();
 
-function onSearch(val) {
-  searchCustomer.value = val;
-  page.value = 1;
+// Handle page change
+function onPageChange(val: number) {
+  page.value = val;
+  fetchData();
 }
 
-function onPageChange(val) {
-  page.value = val;
+// Handle search - only search in name and email
+function onSearch(val: string) {
+  if (!val) {
+    customerList.value = rows.value;
+    return;
+  }
+
+  const searchTerm = String(val).toLowerCase();
+  customerList.value = rows.value.filter((item) => {
+    const name = String(item.name || "").toLowerCase();
+    const email = String(item.email || "").toLowerCase();
+    return name.includes(searchTerm) || email.includes(searchTerm);
+  });
 }
 
 const editCustomer = (customer: any = null) => {
@@ -603,7 +566,7 @@ const editCustomer = (customer: any = null) => {
   addCustomerModal.value = true;
 };
 
-const saveCustomer = () => {
+const saveCustomer = async () => {
   if (!params.value.name) {
     showMessage("Name is required.", "error");
     return true;
@@ -616,52 +579,124 @@ const saveCustomer = () => {
     showMessage("Phone is required.", "error");
     return true;
   }
-  if (!params.value.role) {
-    showMessage("Occupation is required.", "error");
-    return true;
-  }
 
-  if (params.value.id) {
-    //update customer
-    let customer: any = cusomerList.value.find((d) => d.id === params.value.id);
-    customer.name = params.value.name;
-    customer.email = params.value.email;
-    customer.role = params.value.role;
-    customer.phone = params.value.phone;
-    customer.location = params.value.location;
-  } else {
-    //add customer
-    let maxCustomerId = cusomerList.value.length
-      ? cusomerList.value.reduce(
-          (max, character) => (character.id > max ? character.id : max),
-          cusomerList.value[0].id
-        )
-      : 0;
+  try {
+    // Show confirmation dialog
+    const confirmResult = await Swal.fire({
+      title: params.value.id ? "Update Customer?" : "Add Customer?",
+      text: params.value.id
+        ? "Do you want to update this customer?"
+        : "Do you want to add this customer?",
+      icon: "question",
+      showCancelButton: true,
+      confirmButtonText: params.value.id ? "Yes, update it!" : "Yes, add it!",
+      cancelButtonText: "No, cancel!",
+      padding: "2em",
+    });
 
-    let customer = {
-      id: maxCustomerId + 1,
-      path: "profile-35.png",
+    if (!confirmResult.isConfirmed) {
+      return;
+    }
+    loading.value = true;
+    const formData = {
       name: params.value.name,
       email: params.value.email,
-      role: params.value.role,
       phone: params.value.phone,
-      location: params.value.location,
-      posts: 20,
-      followers: "5K",
-      following: 500,
+      address: params.value.address,
+      image: params.value.image || "profile-35.png",
     };
-    cusomerList.value.splice(0, 0, customer);
-    searchCustomers();
-  }
 
-  showMessage("Customer has been saved successfully.");
-  addCustomerModal.value = false;
+    let response;
+    if (params.value.id) {
+      // Update customer
+      response = await fetch(`/api/customers/${params.value.id}`, {
+        method: "PUT",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(formData),
+      });
+    } else {
+      // Add customer
+      response = await fetch("/api/customers", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(formData),
+      });
+    }
+
+    if (!response.ok) {
+      throw new Error("Failed to save customer");
+    }
+
+    const result = await response.json();
+    if (result.success) {
+      showMessage(result.message || "Customer has been saved successfully.");
+      addCustomerModal.value = false;
+      fetchData(); // Refresh the list
+    } else {
+      throw new Error(result.message || "Failed to save customer");
+    }
+  } catch (error) {
+    console.error("Error saving customer:", error);
+    showMessage(error.message || "Error saving customer", "error");
+  } finally {
+    loading.value = false;
+  }
 };
 
-const deleteCustomer = (customer: any = null) => {
-  cusomerList.value = cusomerList.value.filter((d) => d.id != customer.id);
-  searchCustomers();
-  showMessage("Customer has been deleted successfully.");
+const deleteCustomer = async (customer: any = null) => {
+  try {
+    const result = await Swal.fire({
+      title: "Are you sure?",
+      text: "You won't be able to revert this!",
+      icon: "warning",
+      showCancelButton: true,
+      confirmButtonText: "Yes, delete it!",
+      cancelButtonText: "No, cancel!",
+      padding: "2em",
+    });
+
+    if (result.isConfirmed) {
+      loading.value = true;
+      const response = await fetch(`/api/customers/${customer.id}`, {
+        method: "DELETE",
+      });
+
+      if (!response.ok) {
+        throw new Error("Failed to delete customer");
+      }
+
+      const result = await response.json();
+      if (result.success) {
+        showMessage(
+          result.message || "Customer has been deleted successfully."
+        );
+        fetchData(); // Refresh the list
+      } else {
+        throw new Error(result.message || "Failed to delete customer");
+      }
+    }
+  } catch (error) {
+    console.error("Error deleting customer:", error);
+    showMessage(error.message || "Error deleting customer", "error");
+  } finally {
+    loading.value = false;
+  }
+};
+
+const handleImageUpload = (event) => {
+  const file = event.target.files[0];
+  if (file) {
+    const reader = new FileReader();
+    reader.onload = (e) => {
+      params.value.image = e.target.result;
+      imagePreview.value = e.target.result;
+    };
+    reader.readAsDataURL(file);
+  }
 };
 
 const showMessage = (msg = "", type = "success") => {
