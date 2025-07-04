@@ -54,6 +54,11 @@ const routes: RouteRecordRaw[] = [
         name: 'contacts',
         component: () => import(/* webpackChunkName: "apps-contacts" */ '../views/apps/contacts.vue'),
     },
+    {
+        path: '/apps/customers',
+        name: 'customers',
+        component: () => import(/* webpackChunkName: "apps-customers" */ '../views/apps/customers.vue'),
+    },
     // invoice
     {
         path: '/apps/invoice/list',
