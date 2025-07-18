@@ -54,12 +54,109 @@ const routes: RouteRecordRaw[] = [
         name: 'contacts',
         component: () => import(/* webpackChunkName: "apps-contacts" */ '../views/apps/contacts.vue'),
     },
+
+
+
+    //mulai disini
     {
         path: '/apps/customers',
         name: 'customers',
         component: () => import(/* webpackChunkName: "apps-customers" */ '../views/apps/customers.vue'),
     },
-    // invoice
+
+    {
+        path: '/apps/karyawans',
+        name: 'karyawans',
+        component: () => import(/* webpackChunkName: "apps-customers" */ '../views/apps/karyawans.vue'),
+    },
+
+    {
+        path: '/apps/WarehouseList',
+        name: 'WarehouseList',
+        component: () => import(/* webpackChunkName: "apps-customers" */ '../views/apps/WarehouseList.vue'),
+    },
+
+     {
+        path: '/apps/datalist/datalist',
+        name: 'datalist',
+        component: () => import(/* webpackChunkName: "apps-customers" */ '../views/apps/datalist/datalist.vue'),
+    },
+
+      {
+        path: '/apps/supplier/supplier',
+        name: 'supplier',
+        component: () => import(/* webpackChunkName: "apps-supplier" */ '../views/apps/supplier/supplier.vue'),
+    },
+
+      {
+        path: '/apps/Logistics',
+        name: 'Logistics',
+        component: () => import(/* webpackChunkName: "apps-supplier" */ '../views/apps/Logistics.vue'),
+    },
+      {
+        path: '/apps/Company',
+        name: 'Company',
+        component: () => import(/* webpackChunkName: "apps-supplier" */ '../views/apps/Company.vue'),
+    },
+
+      {
+        path: '/apps/banks',
+        name: 'banks',
+        component: () => import(/* webpackChunkName: "apps-bank" */ '../views/apps/banks.vue'),
+    },
+
+      {
+        path: '/apps/barangs',
+        name: 'barangs',
+        component: () => import(/* webpackChunkName: "apps-bank" */ '../views/apps/barangs.vue'),
+    },
+
+         {
+        path: '/apps/logistiku',
+        name: 'logistiku',
+        component: () => import(/* webpackChunkName: "apps-bank" */ '../views/apps/logistiku.vue'),
+    },
+
+      {
+        path: '/apps/quotation-settings',
+        name: 'quotation-settings',
+        component: () => import( '../views/apps/quotation-settings.vue'),
+    },
+
+   {
+        path: '/apps/quatation/list',
+        name: 'quatation-list',
+        component: () => import(/* webpackChunkName: "apps-invoice-list" */ '../views/apps/quatation/list.vue'),
+    },
+
+     {
+        path: '/apps/quatation/add',
+        name: 'quatation-add',
+        component: () => import(/* webpackChunkName: "apps-invoice-list" */ '../views/apps/quatation/add.vue'),
+    },
+     {
+        path: '/apps/quatation/add2',
+        name: 'quatation-add2',
+        component: () => import(/* webpackChunkName: "apps-invoice-list" */ '../views/apps/quatation/add3.vue'),
+    },
+
+     {
+        path: '/apps/quatation/edit',
+        name: 'quatation-edit',
+        component: () => import(/* webpackChunkName: "apps-invoice-list" */ '../views/apps/quatation/edit.vue'),
+    },
+     {
+        path: '/apps/quatation/calculate',
+        name: 'quatation-calculate',
+        component: () => import(/* webpackChunkName: "apps-invoice-list" */ '../views/apps/quatation/calculate.vue'),
+    },
+
+     {
+        path: '/apps/quatation/preview',
+        name: 'quatation-preview',
+        component: () => import(/* webpackChunkName: "apps-invoice-list" */ '../views/apps/quatation/preview.vue'),
+    },
+    //masih disinii
     {
         path: '/apps/invoice/list',
         name: 'invoice-list',

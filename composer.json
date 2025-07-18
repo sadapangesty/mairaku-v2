@@ -27,9 +27,12 @@
             "Database\\Seeders\\": "database/seeders/"
         }
     },
-    "autoload-dev": {
+
+
+
+     "autoload": {
         "psr-4": {
-            "Tests\\": "tests/"
+            "App\\": "app/"
         }
     },
     "scripts": {

@@ -7,7 +7,7 @@
                         <img class="w-8 ltr:-ml-1 rtl:-mr-1 inline" src="/assets/images/logo.svg" alt="" />
                         <span
                             class="text-2xl ltr:ml-1.5 rtl:mr-1.5 font-semibold align-middle hidden md:inline dark:text-white-light transition-all duration-300"
-                            >VRISTO</span
+                            >MAIRAKU</span
                         >
                     </router-link>
 
@@ -92,7 +92,7 @@
                     class="sm:flex-1 ltr:sm:ml-0 ltr:ml-auto sm:rtl:mr-0 rtl:mr-auto flex items-center space-x-1.5 lg:space-x-2 rtl:space-x-reverse dark:text-[#d0d2d6]"
                 >
                     <div class="sm:ltr:mr-auto sm:rtl:ml-auto">
-                        <form
+                        <!-- <form
                             class="sm:relative absolute inset-x-0 sm:top-0 top-1/2 sm:translate-y-0 -translate-y-1/2 sm:mx-0 mx-4 z-10 sm:block hidden"
                             :class="{ '!block': search }"
                             @submit.prevent="search = false"
@@ -143,7 +143,7 @@
                                 <circle cx="11.5" cy="11.5" r="9.5" stroke="currentColor" stroke-width="1.5" opacity="0.5" />
                                 <path d="M18.5 18.5L22 22" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" />
                             </svg>
-                        </button>
+                        </button> -->
                     </div>
                     <div>
                         <a
@@ -195,37 +195,6 @@
                         </a>
                     </div>
 
-                    <div class="dropdown shrink-0">
-                        <Popper :placement="store.rtlClass === 'rtl' ? 'bottom-end' : 'bottom-start'" offsetDistance="8">
-                            <button
-                                type="button"
-                                class="block p-2 rounded-full bg-white-light/40 dark:bg-dark/40 hover:text-primary hover:bg-white-light/90 dark:hover:bg-dark/60"
-                            >
-                                <img :src="currentFlag" alt="flag" class="w-5 h-5 object-cover rounded-full" />
-                            </button>
-                            <template #content="{ close }">
-                                <ul class="!px-2 text-dark dark:text-white-dark grid grid-cols-2 gap-2 font-semibold dark:text-white-light/90 w-[280px]">
-                                    <template v-for="item in store.languageList" :key="item.code">
-                                        <li>
-                                            <button
-                                                type="button"
-                                                class="w-full hover:text-primary"
-                                                :class="{ 'bg-primary/10 text-primary': i18n.locale === item.code }"
-                                                @click="changeLanguage(item), close()"
-                                            >
-                                                <img
-                                                    class="w-5 h-5 object-cover rounded-full"
-                                                    :src="`/assets/images/flags/${item.code.toUpperCase()}.svg`"
-                                                    alt=""
-                                                />
-                                                <span class="ltr:ml-3 rtl:mr-3">{{ item.name }}</span>
-                                            </button>
-                                        </li>
-                                    </template>
-                                </ul>
-                            </template>
-                        </Popper>
-                    </div>
 
                     <div class="dropdown shrink-0">
                         <Popper :placement="store.rtlClass === 'rtl' ? 'bottom-start' : 'bottom-end'" offsetDistance="8">

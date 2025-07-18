@@ -11,13 +11,13 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('customer', function (Blueprint $table) {
-            $table->id();
+        Schema::create('customers', function (Blueprint $table) {
+            $table->id('id_customer');
             $table->string('name');
-            $table->string('email');
-            $table->string('phone');
-            $table->string('address')->nullable();
-            $table->string('image')->nullable();
+            $table->string('email')->unique();
+            $table->string('phone')->unique();
+            $table->text('address')->nullable();
+            $table->string('marking_code_prefix')->nullable(); // kolom baru
             $table->timestamps();
         });
     }
@@ -27,6 +27,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('customer');
+        Schema::dropIfExists('customers');
     }
 };

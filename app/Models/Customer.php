@@ -9,9 +9,7 @@ class Customer extends Model
 {
     use HasFactory;
 
-    // Explicitly define table name
-    protected $table = 'customer';
-
-    // Define which attributes are mass assignable
-    protected $fillable = ['name', 'email', 'phone', 'address', 'image'];
+    protected $table = 'customers';
+    protected $primaryKey = 'id_customer';
+    protected $fillable = ['name', 'email', 'phone', 'address', 'marking_code_prefix'];
 }

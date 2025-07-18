@@ -4,162 +4,55 @@ namespace App\Http\Controllers;
 
 use App\Models\Customer;
 use Illuminate\Http\Request;
-use Illuminate\Http\JsonResponse;
-use Illuminate\Support\Facades\Log;
 
 class CustomerController extends Controller
 {
-    /**
-     * Get all customers
-     */
-    public function index(): JsonResponse
+    public function index()
     {
-        try {
-            $customers = Customer::paginate(10);
-            return response()->json([
-                'success' => true,
-                'data' => $customers
-            ]);
-        } catch (\Exception $e) {
-            Log::error("Error fetching customers: " . $e->getMessage());
-            return response()->json([
-                'success' => false,
-                'message' => 'Error fetching customers'
-            ], 500);
-        }
+        return Customer::all();
     }
 
-    /**
-     * Store a newly created customer in storage.
-     */
-    public function store(Request $request): JsonResponse
+    public function store(Request $request)
     {
-        // Validate input data
-        $validatedData = $request->validate([
-            'name'    => 'required|string|max:255',
-            'email'   => 'required|email|max:255',
-            'phone'   => 'required|string|max:50',
-            'address' => 'nullable|string|max:500',
-            'image'   => 'nullable|string'
+        $validated = $request->validate([
+            'name'   => 'required',
+            'email'  => 'required|email|unique:customers,email',
+            'phone'  => 'required|unique:customers,phone',
+            'address'=> 'nullable',
         ]);
 
-        try {
-            // Handle image upload
-            if (isset($validatedData['image']) && strpos($validatedData['image'], 'data:image') === 0) {
-                // Extract image data from base64 string
-                $imageData = base64_decode(explode(',', $validatedData['image'])[1]);
+        // Hitung jumlah customer untuk buat nomor urut
+        $count = Customer::count() + 1;
+        $prefix = strtolower($validated['name']) . '/mr' . str_pad($count, 2, '0', STR_PAD_LEFT);
 
-                // Generate unique filename
-                $filename = 'customer-' . time() . '.png';
+        // Tambah marking_code_prefix ke validated data
+        $validated['marking_code_prefix'] = $prefix;
 
-                // Create directory if it doesn't exist
-                $imagePath = public_path('assets/images');
-                if (!file_exists($imagePath)) {
-                    mkdir($imagePath, 0755, true);
-                }
-
-                // Save image to public/assets/images
-                file_put_contents($imagePath . '/' . $filename, $imageData);
-
-                $validatedData['image'] = $filename;
-            } else {
-                // Set default image if not provided
-                $validatedData['image'] = $validatedData['image'] ?? 'profile-35.png';
-            }
-
-            // Create customer record
-            $customer = Customer::create($validatedData);
-
-            return response()->json([
-                'success' => true,
-                'message' => 'Customer added successfully',
-                'data'    => $customer
-            ], 201);
-        } catch (\Exception $e) {
-            // Log the error details for debugging
-            Log::error("Error adding customer: " . $e->getMessage());
-
-            return response()->json([
-                'success' => false,
-                'message' => 'Error adding customer, please try again later.'
-            ], 500);
-        }
+        return Customer::create($validated);
     }
 
-    /**
-     * Delete a customer
-     */
-    /**
-     * Update a customer
-     */
-    public function update(Request $request, $id): JsonResponse
+    public function update(Request $request, $id)
     {
-        $validatedData = $request->validate([
-            'name'    => 'required|string|max:255',
-            'email'   => 'required|email|max:255',
-            'phone'   => 'required|string|max:50',
-            'address' => 'nullable|string|max:500',
-            'image'   => 'nullable|string'
+        $customer = Customer::findOrFail($id);
+        $validated = $request->validate([
+            'name'   => 'required',
+            'email'  => 'required|email|unique:customers,email,' . $id . ',id_customer',
+            'phone'  => 'required|unique:customers,phone,' . $id . ',id_customer',
+            'address'=> 'nullable',
         ]);
 
-        try {
-            $customer = Customer::findOrFail($id);
+        // Optional: update marking jika nama berubah (boleh di-comment kalau mau fix)
+        $number = $id; // pakai ID customer
+        $validated['marking_code_prefix'] = strtolower($validated['name']) . '/MR' . str_pad($number, 2, '0', STR_PAD_LEFT);
 
-            // Handle image upload
-            if (isset($validatedData['image']) && strpos($validatedData['image'], 'data:image') === 0) {
-                // Extract image data from base64 string
-                $imageData = base64_decode(explode(',', $validatedData['image'])[1]);
-
-                // Generate unique filename
-                $filename = 'customer-' . time() . '.png';
-
-                // Create directory if it doesn't exist
-                $imagePath = public_path('assets/images');
-                if (!file_exists($imagePath)) {
-                    mkdir($imagePath, 0755, true);
-                }
-
-                // Save image to public/assets/images
-                file_put_contents($imagePath . '/' . $filename, $imageData);
-
-                $validatedData['image'] = $filename;
-            } else {
-                // Keep existing image if no new image is uploaded
-                unset($validatedData['image']);
-            }
-
-            $customer->update($validatedData);
-
-            return response()->json([
-                'success' => true,
-                'message' => 'Customer updated successfully',
-                'data'    => $customer
-            ]);
-        } catch (\Exception $e) {
-            Log::error("Error updating customer: " . $e->getMessage());
-            return response()->json([
-                'success' => false,
-                'message' => 'Error updating customer'
-            ], 500);
-        }
+        $customer->update($validated);
+        return $customer;
     }
 
-    public function destroy($id): JsonResponse
+    public function destroy($id)
     {
-        try {
-            $customer = Customer::findOrFail($id);
-            $customer->delete();
-
-            return response()->json([
-                'success' => true,
-                'message' => 'Customer deleted successfully'
-            ]);
-        } catch (\Exception $e) {
-            Log::error("Error deleting customer: " . $e->getMessage());
-            return response()->json([
-                'success' => false,
-                'message' => 'Error deleting customer'
-            ], 500);
-        }
+        $customer = Customer::findOrFail($id);
+        $customer->delete();
+        return response()->json(['message' => 'Deleted successfully']);
     }
 }
